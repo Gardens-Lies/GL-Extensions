@@ -7,6 +7,29 @@ namespace Codomaster.Extensions
     public static class ComponentExtensions
     {
         /// <summary>
+        /// Copy <see cref="Component"/> and transfer it to selected <see cref="GameObject"/>.
+        /// <br></br>
+        /// https://discussions.unity.com/t/copy-a-component-at-runtime/71172/3
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="destination"></param>
+        /// <returns>The copy</returns>
+        public static Component CopyComponentToGameObject
+            (this Component component, GameObject destination)
+        {
+
+            System.Type type = component.GetType();
+            Component copy = destination.AddComponent(type);
+
+            // Copied fields can be restricted with BindingFlags
+            System.Reflection.FieldInfo[] fields = type.GetFields();
+            foreach (System.Reflection.FieldInfo field in fields)
+                field.SetValue(copy, field.GetValue(component));
+            
+            return copy;
+        }
+        
+        /// <summary>
         /// Gets <typeparamref name="T"/> component from <paramref name="component"/>'s game object. If it no exist, new one will be created.
         /// </summary>
         /// <typeparam name="T">Component type.</typeparam>
