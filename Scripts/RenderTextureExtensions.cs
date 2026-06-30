@@ -1,11 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Codomaster.Extensions
 {
     public static class RenderTextureExtensions
     {
+        /// <summary>
+        /// Try to refresh render texture.
+        /// </summary>
+        /// <param name="renderTexture">The render texture.</param>
+        /// <returns>True if the texture was refreshed, false otherwise.</returns>
+        public static bool TryRefresh(this RenderTexture renderTexture)
+        {
+            renderTexture.Release();
+            return renderTexture.Create();
+        }
+
+        /// <summary>
+        /// Try to resize the texture to selected resolution.
+        /// <br></br>
+        /// Texture will not be resized if the selected resolution is the same as before.
+        /// </summary>
+        /// <param name="renderTexture">The render texture.</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns>True if the texture was resized, false otherwise.</returns>
+        public static bool TryResize(this RenderTexture renderTexture, int width, int height)
+        {
+            renderTexture.Release();
+
+            if (renderTexture.width == width && renderTexture.height == height)
+                return false;
+
+            renderTexture.width = width;
+            renderTexture.height = height;
+
+            return renderTexture.Create();
+        }
+
         /// <summary>
         /// Create texture and write <paramref name="renderTexture"/> to it.
         /// </summary>
