@@ -16,7 +16,17 @@ namespace Codomaster.Extensions
             foreach (var position in sourceTilemap.cellBounds.allPositionsWithin)
             {
                 if (sourceTilemap.HasTile(position))
-                    targetTilemap.SetTile(position, sourceTilemap.GetTile(position));
+                {
+                    var tile = sourceTilemap.GetTile(position);
+                    targetTilemap.SetTile(position, tile);
+
+                    // Tiles can have different rotations, so we apply the right matrix.
+                    Matrix4x4 tileMatrix = sourceTilemap.GetTransformMatrix(position);
+                    targetTilemap.SetTransformMatrix(position, tileMatrix);
+
+                    Color tileColor = sourceTilemap.GetColor(position);
+                    targetTilemap.SetColor(position, tileColor);
+                }
             }
 
             return targetTilemap;
